@@ -1,0 +1,11 @@
+spring:
+  liquibase:
+    enabled: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bankdb
+    username: bankuser
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
