@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/001-init-users.yml
+  - include:
+      file: db/changelog/002-create-cards.yml
+  - include:
+      file: db/changelog/003-create-transactions.yml
+  - include:
+      file: db/changelog/004-create-refresh-tokens.yml
+  - include:
+      file: db/changelog/005-seed-roles.yml
