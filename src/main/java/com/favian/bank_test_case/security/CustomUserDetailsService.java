@@ -1,6 +1,7 @@
 package com.favian.bank_test_case.security;
 
 import com.favian.bank_test_case.entity.User;
+import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
+                .orElseThrow(() -> new UserNotFoundException("email", email));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

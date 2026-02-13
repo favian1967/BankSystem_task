@@ -2,6 +2,8 @@ package com.favian.bank_test_case.service;
 
 import com.favian.bank_test_case.entity.RefreshToken;
 import com.favian.bank_test_case.entity.User;
+import com.favian.bank_test_case.exception.exceptions.RefreshTokenExpiredException;
+import com.favian.bank_test_case.exception.exceptions.RefreshTokenNotFoundException;
 import com.favian.bank_test_case.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,13 +34,13 @@ public class RefreshTokenService {
 
     public RefreshToken findByToken(String token) {
         return refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Refresh токен не найден"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException());
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.isExpired()) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException("Refresh токен истек");
+            throw new RefreshTokenExpiredException();
         }
         return token;
     }

@@ -4,6 +4,8 @@ import com.favian.bank_test_case.dto.AuthResponse;
 import com.favian.bank_test_case.dto.LoginRequest;
 import com.favian.bank_test_case.dto.RegisterRequest;
 import com.favian.bank_test_case.entity.User;
+import com.favian.bank_test_case.exception.exceptions.UserAlreadyExistsException;
+import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +28,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new UserAlreadyExistsException(request.getEmail());
         }
 
         User user = new User();
@@ -51,7 +53,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new UserNotFoundException("email", request.getEmail()));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
