@@ -3,9 +3,12 @@ package com.favian.bank_test_case.service;
 import com.favian.bank_test_case.dto.AuthResponse;
 import com.favian.bank_test_case.dto.LoginRequest;
 import com.favian.bank_test_case.dto.RegisterRequest;
+import com.favian.bank_test_case.entity.Role;
 import com.favian.bank_test_case.entity.User;
+import com.favian.bank_test_case.exception.exceptions.RoleNotFoundException;
 import com.favian.bank_test_case.exception.exceptions.UserAlreadyExistsException;
 import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
+import com.favian.bank_test_case.repository.RoleRepository;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -25,6 +28,17 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final RoleRepository roleRepository;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.roleRepository = roleRepository;
+    }
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -37,7 +51,12 @@ public class AuthService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPhone(request.getPhone());
-        
+
+        Role role = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RoleNotFoundException("ROLE_USER"));
+
+        user.getRoles().add(role);
+
         userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
