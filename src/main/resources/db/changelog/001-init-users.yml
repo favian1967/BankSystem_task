@@ -2,7 +2,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 001-create-roles
-      author: you
+      author: favian47
       changes:
         - createTable:
             tableName: roles

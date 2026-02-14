@@ -2,7 +2,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 006-create-refresh-tokens
-      author: you
+      author: favian47
       changes:
         - createTable:
             tableName: refresh_tokens

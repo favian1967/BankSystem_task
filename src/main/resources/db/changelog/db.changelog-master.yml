@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/004-create-refresh-tokens.yml
   - include:
       file: db/changelog/005-seed-roles.yml
+  - include:
+      file: db/changelog/006-seed-users.yml

@@ -55,8 +55,8 @@ public class AuthService {
         user.setLastName(request.lastName());
         user.setPhone(request.phone());
 
-        Role role = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RoleNotFoundException("ROLE_USER"));
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new RoleNotFoundException("USER"));
 
         user.getRoles().add(role);
 

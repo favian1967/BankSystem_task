@@ -2,7 +2,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 004-create-cards
-      author: you
+      author: favian47
       changes:
         - createTable:
             tableName: cards

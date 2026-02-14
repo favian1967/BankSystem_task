@@ -1,0 +1,75 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 008-seed-users
+      author: favian47
+      preConditions:
+        - onFail: MARK_RAN
+
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: d@g
+              - column:
+                  name: password_hash
+                  value: $2a$10$DTuyKMRczA3.U.JCKO7btuLxWh8RwQd.53T4GT7MF2CT9elzQ9/xS
+              - column:
+                  name: phone
+                  value: +1234567890
+              - column:
+                  name: first_name
+                  value: favian
+              - column:
+                  name: last_name
+                  value: Rubi
+              - column:
+                  name: created_at
+                  valueDate: 2026-03-14T12:08:49
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: m@g
+              - column:
+                  name: password_hash
+                  value: $2a$10$DTuyKMRczA3.U.JCKO7btuLxWh8RwQd.53T4GT7MF2CT9elzQ9/xS
+              - column:
+                  name: phone
+                  value: +1234567891
+              - column:
+                  name: first_name
+                  value: max
+              - column:
+                  name: last_name
+                  value: mess
+              - column:
+                  name: created_at
+                  valueDate: 2026-02-14T12:08:49
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE email = 'm@g')
+              - column:
+                  name: role_id
+                  valueComputed: (SELECT id FROM roles WHERE name = 'USER')
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE email = 'd@g')
+              - column:
+                  name: role_id
+                  valueComputed: (SELECT id FROM roles WHERE name = 'ADMIN')
+
+
+

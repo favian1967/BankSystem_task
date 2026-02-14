@@ -2,7 +2,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 007-seed-roles
-      author: you
+      author: favian47
       preConditions:
         - onFail: MARK_RAN
         - tableIsEmpty:
