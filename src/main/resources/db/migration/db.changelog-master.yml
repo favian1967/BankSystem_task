@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: db/migration/001-init-users.yml
+  - include:
+      file: db/migration/002-create-cards.yml
+  - include:
+      file: db/migration/003-create-transactions.yml
+  - include:
+      file: db/migration/004-create-refresh-tokens.yml
+  - include:
+      file: db/migration/005-seed-roles.yml
+  - include:
+      file: db/migration/006-seed-users.yml
