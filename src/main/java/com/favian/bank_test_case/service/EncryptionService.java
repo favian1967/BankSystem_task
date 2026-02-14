@@ -13,7 +13,7 @@ import java.util.Base64;
 @Service
 public class EncryptionService {
 
-    @Value("${card.encryption-key}")
+    @Value("${card.encryption-key:test_key_32_chars_for_aes_256!}")
     private String secret;
 
     private SecretKeySpec secretKeySpec;

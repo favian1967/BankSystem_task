@@ -1,0 +1,22 @@
+spring:
+  liquibase:
+    enabled: false
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bank_test
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+jwt:
+  secret: dGVzdF9zZWNyZXRfa2V5X2Zvcl9qd3RfdG9rZW5fZ2VuZXJhdGlvbl8zMl9ieXRlcw==
+  access-expiration: 3600000
+  refresh-expiration: 86400000
+
+card:
+  encryption-key: test_key_32_chars_for_aes_256!

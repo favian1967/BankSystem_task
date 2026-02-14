@@ -16,10 +16,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:dGVzdF9zZWNyZXRfa2V5X2Zvcl9qd3RfdG9rZW5fZ2VuZXJhdGlvbl8zMl9ieXRlcw==}")
     private String secret;
 
-    @Value("${jwt.access-expiration}")
+    @Value("${jwt.access-expiration:3600000}")
     private long accessExpiration;
 
     public String generateAccessToken(UserDetails userDetails) {
