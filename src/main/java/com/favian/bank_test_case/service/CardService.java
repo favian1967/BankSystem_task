@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -89,8 +90,8 @@ public class CardService {
     //admin
     @Transactional
     public CardResponse createCard(CreateCardRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("id", request.getUserId().toString()));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UserNotFoundException("id", request.userId().toString()));
         
         Card card = new Card();
         card.setUser(user);
@@ -100,7 +101,7 @@ public class CardService {
         card.setMaskedNumber(maskCardNumber(cardNumber));
         card.setExpiryDate(LocalDate.now().plusYears(3));
         card.setStatus(CardStatus.ACTIVE);
-        card.setBalance(request.getInitialBalance());
+        card.setBalance(BigDecimal.ZERO);
         
         Card savedCard = cardRepository.save(card);
         return mapToCardResponse(savedCard);

@@ -61,17 +61,17 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
         
-        if (request.getEmail() != null && !request.getEmail().isBlank()) {
-            user.setEmail(request.getEmail());
+        if (request.email() != null && !request.email().isBlank()) {
+            user.setEmail(request.email());
         }
-        if (request.getFirstName() != null) {
-            user.setFirstName(request.getFirstName());
+        if (request.firstName() != null) {
+            user.setFirstName(request.firstName());
         }
-        if (request.getLastName() != null) {
-            user.setLastName(request.getLastName());
+        if (request.lastName() != null) {
+            user.setLastName(request.lastName());
         }
-        if (request.getPhone() != null) {
-            user.setPhone(request.getPhone());
+        if (request.phone() != null) {
+            user.setPhone(request.phone());
         }
         
         User savedUser = userRepository.save(user);
