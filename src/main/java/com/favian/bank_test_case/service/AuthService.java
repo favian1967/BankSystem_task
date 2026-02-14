@@ -5,6 +5,7 @@ import com.favian.bank_test_case.dto.LoginRequest;
 import com.favian.bank_test_case.dto.RegisterRequest;
 import com.favian.bank_test_case.entity.Role;
 import com.favian.bank_test_case.entity.User;
+import com.favian.bank_test_case.exception.exceptions.InvalidCredentialsException;
 import com.favian.bank_test_case.exception.exceptions.RoleNotFoundException;
 import com.favian.bank_test_case.exception.exceptions.UserAlreadyExistsException;
 import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
@@ -12,7 +13,9 @@ import com.favian.bank_test_case.repository.RoleRepository;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,9 +70,15 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+        } catch (BadCredentialsException ex) {
+            throw new InvalidCredentialsException();
+        } catch (AuthenticationException ex) {
+            throw new InvalidCredentialsException();
+        }
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UserNotFoundException("email", request.email()));

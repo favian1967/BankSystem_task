@@ -13,31 +13,42 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cards")
-@RequiredArgsConstructor
 @Tag(name = "Cards", description = "Card management endpoints")
+@Validated
 public class CardController {
 
     private final CardService cardService;
     private final TransactionService transactionService;
     private final UserService userService;
 
+    public CardController(CardService cardService, TransactionService transactionService, UserService userService) {
+        this.cardService = cardService;
+        this.transactionService = transactionService;
+        this.userService = userService;
+    }
+
     @GetMapping
     @Operation(summary = "Get all cards", description = "Get all cards for the authenticated user with pagination")
     public ResponseEntity<Page<CardResponse>> getAllCards(
             @Parameter(description = "Page number (0-based)")
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
             @Parameter(description = "Number of items per page")
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
             @Parameter(description = "Sort by field")
             @RequestParam(defaultValue = "id") String sortBy,
             @Parameter(description = "Sort direction (ASC or DESC)")
@@ -54,9 +65,9 @@ public class CardController {
     @Operation(summary = "Search cards", description = "Search cards by masked number")
     public ResponseEntity<Page<CardResponse>> searchCards(
             @Parameter(description = "Search term (card number)")
-            @RequestParam String query,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam @NotBlank(message = "Search query cannot be empty") String query,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
     ) {
         User currentUser = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size);
@@ -69,8 +80,8 @@ public class CardController {
     public ResponseEntity<Page<CardResponse>> getCardsByStatus(
             @Parameter(description = "Card status (ACTIVE, BLOCKED, EXPIRED)")
             @PathVariable CardStatus status,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
     ) {
         User currentUser = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size);
@@ -82,7 +93,7 @@ public class CardController {
     @Operation(summary = "Get card by ID", description = "Get specific card details")
     public ResponseEntity<CardResponse> getCardById(
             @Parameter(description = "Card ID")
-            @PathVariable Long cardId
+            @PathVariable @Positive(message = "Card ID must be positive") Long cardId
     ) {
         User currentUser = userService.getCurrentUser();
         return ResponseEntity.ok(cardService.getCardById(cardId, currentUser));
@@ -92,7 +103,7 @@ public class CardController {
     @Operation(summary = "Get card balance", description = "Get balance for a specific card")
     public ResponseEntity<BalanceResponse> getCardBalance(
             @Parameter(description = "Card ID")
-            @PathVariable Long cardId
+            @PathVariable @Positive(message = "Card ID must be positive") Long cardId
     ) {
         User currentUser = userService.getCurrentUser();
         return ResponseEntity.ok(cardService.getCardBalance(cardId, currentUser));
@@ -102,7 +113,7 @@ public class CardController {
     @Operation(summary = "Block card", description = "Block a card to prevent transactions")
     public ResponseEntity<CardResponse> blockCard(
             @Parameter(description = "Card ID")
-            @PathVariable Long cardId
+            @PathVariable @Positive(message = "Card ID must be positive") Long cardId
     ) {
         User currentUser = userService.getCurrentUser();
         return ResponseEntity.ok(cardService.blockCard(cardId, currentUser));
@@ -121,9 +132,9 @@ public class CardController {
     @Operation(summary = "Get card transactions", description = "Get all transactions for a specific card")
     public ResponseEntity<Page<TransactionResponse>> getCardTransactions(
             @Parameter(description = "Card ID")
-            @PathVariable Long cardId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @PathVariable @Positive(message = "Card ID must be positive") Long cardId,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
     ) {
         User currentUser = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -134,8 +145,8 @@ public class CardController {
     @GetMapping("/transactions")
     @Operation(summary = "Get all transactions", description = "Get all transactions for the authenticated user")
     public ResponseEntity<Page<TransactionResponse>> getAllTransactions(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
     ) {
         User currentUser = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
