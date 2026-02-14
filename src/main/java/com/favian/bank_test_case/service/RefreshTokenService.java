@@ -19,7 +19,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${jwt.refresh-expiration}")
+    @Value("${jwt.refresh-expiration:86400000}")
     private long refreshExpiration;
 
     public String createRefreshToken(User user) {
