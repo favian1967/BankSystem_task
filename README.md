@@ -30,6 +30,7 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
+<a id="about-the-project"></a>
 ## О проекте
 
 **Bank Card Management System** — REST API для управления банковскими картами с JWT-аутентификацией, ролевым доступом и интеграцией с PostgreSQL.
@@ -43,6 +44,7 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="built-with"></a>
 ### Стек
 
 * [![Java][java-shield]][java-url]
@@ -55,14 +57,17 @@
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+<a id="getting-started"></a>
 ## Быстрый старт
 
+<a id="prerequisites"></a>
 ### Требования
 
 - **Java 21**
 - **Docker** и **Docker Compose** (для контейнерного запуска)
 - **Maven** (опционально, используется встроенный wrapper)
 
+<a id="installation"></a>
 ### Установка и запуск
 
 1. Скопируйте пример окружения:
@@ -101,6 +106,7 @@ docker compose up --build
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
+<a id="usage"></a>
 ## Использование
 
 - Приложение доступно на: [http://localhost:8080](http://localhost:8080)
@@ -108,12 +114,13 @@ docker compose up --build
 - PostgreSQL пробрасывается на `localhost:5432`
 
 **Тестовые пользователи:**
-- Admin: `admin@test.com` / `admin123`
-- User: `user@test.com` / `user123`
+- Admin: `d@g` / `25442544`
+- User: `m@g` / `25442544`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONFIGURATION -->
+<a id="configuration"></a>
 ## Конфигурация
 
 Параметры конфигурации задаются через файл `.env`:
@@ -129,6 +136,7 @@ docker compose up --build
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="architecture"></a>
 ## Архитектура
 
 Проект следует многослойной архитектуре (Layered Architecture):
@@ -153,6 +161,7 @@ docker compose up --build
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<a id="api-overview"></a>
 ## API Overview
 
 ### Authentication
@@ -194,55 +203,7 @@ Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagge
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Database Schema
-
-```
-users
-├── id (PK)
-├── email (unique)
-├── password_hash
-├── first_name
-├── last_name
-├── phone (unique)
-├── created_at
-└── updated_at
-
-roles
-├── id (PK)
-└── name (unique)
-
-users_roles (many-to-many)
-├── user_id (FK)
-└── role_id (FK)
-
-cards
-├── id (PK)
-├── user_id (FK)
-├── encrypted_number
-├── masked_number
-├── expiry_date
-├── status (ACTIVE/BLOCKED/EXPIRED)
-└── balance
-
-transactions
-├── id (PK)
-├── from_card_id (FK, nullable)
-├── to_card_id (FK, nullable)
-├── type (TRANSFER/DEPOSIT/WITHDRAWAL)
-├── amount
-├── description
-├── status (PENDING/COMPLETED/FAILED)
-├── created_at
-└── completed_at
-
-refresh_tokens
-├── id (PK)
-├── token (unique)
-├── user_id (FK)
-├── expiry_date
-└── created_at
-```
-
+<a id="database-schema"></a>
 ## Database Schema
 
 ```
@@ -268,6 +229,7 @@ users_roles             ├── expiry_date
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- TESTING -->
+<a id="testing"></a>
 ## Тестирование
 
 ```bash
@@ -282,6 +244,7 @@ users_roles             ├── expiry_date
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
+<a id="contact"></a>
 ## Контакты
 
 Email: dpastuhovj@gmail.com  
