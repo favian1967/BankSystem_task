@@ -14,6 +14,7 @@ import com.favian.bank_test_case.exception.exceptions.InvalidAmountException;
 import com.favian.bank_test_case.repository.CardRepository;
 import com.favian.bank_test_case.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -71,9 +73,14 @@ public class TransactionService {
 
             transaction.setStatus(TransactionStatus.COMPLETED);
             transaction.setCompletedAt(LocalDateTime.now());
+            
+            log.info("Transfer completed: amount={}, from={}, to={}, user={}", 
+                    request.amount(), fromCard.getMaskedNumber(), toCard.getMaskedNumber(), user.getEmail());
 
         } catch (Exception e) {
             transaction.setStatus(TransactionStatus.FAILED);
+            log.error("Transfer failed: from={}, to={}, amount={}, error={}", 
+                    fromCard.getId(), toCard.getId(), request.amount(), e.getMessage());
             throw e;
         } finally {
             transaction = transactionRepository.save(transaction);

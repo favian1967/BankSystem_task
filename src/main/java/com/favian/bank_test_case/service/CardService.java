@@ -12,6 +12,7 @@ import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
 import com.favian.bank_test_case.repository.CardRepository;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
 
+@Slf4j
 @Service
 public class CardService {
 
@@ -78,6 +80,7 @@ public class CardService {
         
         card.setStatus(CardStatus.BLOCKED);
         Card savedCard = cardRepository.save(card);
+        log.info("Card blocked by user: cardId={}, user={}", cardId, user.getEmail());
         return mapToCardResponse(savedCard);
     }
 
@@ -104,6 +107,7 @@ public class CardService {
         card.setBalance(BigDecimal.ZERO);
         
         Card savedCard = cardRepository.save(card);
+        log.info("Card created: cardId={}, userId={}, masked={}", savedCard.getId(), user.getId(), savedCard.getMaskedNumber());
         return mapToCardResponse(savedCard);
     }
     
@@ -124,6 +128,7 @@ public class CardService {
         
         card.setStatus(CardStatus.BLOCKED);
         Card savedCard = cardRepository.save(card);
+        log.info("Card blocked by admin: cardId={}", cardId);
         return mapToCardResponse(savedCard);
     }
     
@@ -134,6 +139,7 @@ public class CardService {
         
         card.setStatus(CardStatus.ACTIVE);
         Card savedCard = cardRepository.save(card);
+        log.info("Card activated: cardId={}", cardId);
         return mapToCardResponse(savedCard);
     }
     
@@ -143,6 +149,7 @@ public class CardService {
                 .orElseThrow(() -> new CardNotFoundException("Card not found with id: " + cardId));
         
         cardRepository.delete(card);
+        log.info("Card deleted: cardId={}", cardId);
     }
 
     private CardResponse mapToCardResponse(Card card) {

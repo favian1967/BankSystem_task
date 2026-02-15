@@ -399,9 +399,6 @@ refresh_tokens
 # Все тесты
 ./mvnw test
 
-# С отчетом о покрытии
-./mvnw test jacoco:report
-
 # Только unit-тесты
 ./mvnw test -Dtest="*Test"
 

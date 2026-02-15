@@ -6,6 +6,7 @@ import com.favian.bank_test_case.entity.User;
 import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -75,6 +77,7 @@ public class UserService {
         }
         
         User savedUser = userRepository.save(user);
+        log.info("User updated: userId={}, email={}", userId, savedUser.getEmail());
         return mapToUserResponse(savedUser);
     }
     
@@ -83,6 +86,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
         userRepository.delete(user);
+        log.info("User deleted: userId={}", userId);
     }
     
     private UserResponse mapToUserResponse(User user) {
