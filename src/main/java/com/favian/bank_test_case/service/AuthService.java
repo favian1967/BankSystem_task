@@ -12,6 +12,7 @@ import com.favian.bank_test_case.exception.exceptions.UserNotFoundException;
 import com.favian.bank_test_case.repository.RoleRepository;
 import com.favian.bank_test_case.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 public class AuthService {
 
@@ -45,6 +47,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
+            log.warn("Registration failed: email already exists - {}", request.email());
             throw new UserAlreadyExistsException(request.email());
         }
 
@@ -61,6 +64,7 @@ public class AuthService {
         user.getRoles().add(role);
 
         userRepository.save(user);
+        log.info("User registered successfully: {}", request.email());
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String accessToken = jwtService.generateAccessToken(userDetails);
@@ -75,8 +79,10 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
         } catch (BadCredentialsException ex) {
+            log.warn("Login failed: invalid credentials for {}", request.email());
             throw new InvalidCredentialsException();
         } catch (AuthenticationException ex) {
+            log.warn("Login failed: authentication error for {}", request.email());
             throw new InvalidCredentialsException();
         }
 
@@ -88,6 +94,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(userDetails);
         String refreshToken = refreshTokenService.createRefreshToken(user);
 
+        log.info("User logged in successfully: {}", request.email());
         return new AuthResponse(accessToken, refreshToken);
     }
 
@@ -99,6 +106,7 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String accessToken = jwtService.generateAccessToken(userDetails);
 
+        log.debug("Token refreshed for user: {}", user.getEmail());
         return new AuthResponse(accessToken, refreshToken);
     }
 }

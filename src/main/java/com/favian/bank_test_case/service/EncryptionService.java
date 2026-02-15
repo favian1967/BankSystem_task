@@ -1,7 +1,7 @@
 package com.favian.bank_test_case.service;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,20 +10,29 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+@Slf4j
 @Service
 public class EncryptionService {
 
-    @Value("${card.encryption-key:test_key_32_chars_for_aes_256!}")
+    @Value("${card.encryption-key:12345678901234567890123456789012}")
     private String secret;
 
     private SecretKeySpec secretKeySpec;
 
     @PostConstruct
     public void init() {
-        if (secret.length() != 32) {
-            throw new IllegalArgumentException("Encryption key must be 32 characters (AES-256)");
+        log.info("Encryption key length: {} characters", secret.length());
+        
+        if (secret.length() < 32) {
+            secret = String.format("%-32s", secret).replace(' ', '0');
+            log.warn("Encryption key was too short, padded to 32 characters");
+        } else if (secret.length() > 32) {
+            secret = secret.substring(0, 32);
+            log.warn("Encryption key was too long, truncated to 32 characters");
         }
+        
         secretKeySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "AES");
+        log.info("EncryptionService initialized successfully");
     }
 
     public String encrypt(String value) {

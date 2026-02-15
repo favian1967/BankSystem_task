@@ -165,12 +165,11 @@ public class CardService {
         
         return cardNumber.toString();
     }
-    
+
     private String maskCardNumber(String cardNumber) {
         if (cardNumber.length() != 16) {
             return cardNumber;
         }
-        
-        return cardNumber.substring(0, 4) + " **** **** " + cardNumber.substring(12);
+        return "**** **** **** " + cardNumber.substring(12);
     }
 }
